@@ -20,11 +20,7 @@ public with sharing class TriggerFramework {
     private String runningSObject;
     private Map<String, String[]> registeredContextHandlers;
     private static Map<String, TriggerFramework> frameworksInMemory;
-    /********************************* ALLOWED AND NOT ALLOWED CONSTRUCTORS ***************************************/
-    private TriggerFramework() {
-        /* Do not allow empty constructor */
-        throw new CannotCreateInstanceException(DEFAULT_CONSTRUCTOR_EXCEPTION);
-    }
+
     private TriggerFramework(String sObjectName) {
         this.runningSObject = sObjectName;
         System.debug(
@@ -100,14 +96,14 @@ public with sharing class TriggerFramework {
     * initiate : This is the entry point of framework. It takes the current trigger operation as an parameter
     * 			 and finds all handlers listed for the object, framework is running for. It picks them in the
     * 			 sorted order of their execution, calls the implemented run method in the same sequence.
-    */    
+    */
     public void initiate(System.TriggerOperation context) {
         String[] contextHandlers = this.registeredContextHandlers.get(context.name());
         if (contextHandlers == null) {
             System.debug(
                 System.LoggingLevel.INFO,
-                '#### Context ' + 
-                context.name() + 
+                '#### Context ' +
+                context.name() +
                 ' not found under registered context handlers. Skipping execution ####'
             );
             return;
@@ -131,11 +127,11 @@ public with sharing class TriggerFramework {
             contextRunner = (TriggerContextInterface) handlerType.newInstance();
             if (!contextRunner.supports(context)) {
                 throw new UnsupportedTriggerContextException(
-                	'Expected ' + 
-                    context.name() + 
-                    ' for ' + 
-                    handler + 
-                    '. Check configuration in Trigger Handler metadata' 
+                	'Expected ' +
+                    context.name() +
+                    ' for ' +
+                    handler +
+                    '. Check configuration in Trigger Handler metadata'
                 );
             }
             System.debug(
